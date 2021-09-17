@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Center(
-            child: Text('Splash Screen'),
+            child: Text('Splash Screen',style: TextStyle(fontFamily: 'pac',fontSize: 30),),
           ),
         ),
       )

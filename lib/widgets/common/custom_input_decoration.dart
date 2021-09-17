@@ -13,7 +13,7 @@ class CustomInputDecoration extends InputDecoration {
           prefixIcon: prefixIcon,
           contentPadding: contentPadding,
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Colors.white54,
           isDense: true,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(Constants.radius),

@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseProvider {
   FirebaseProvider._internal() {
@@ -25,20 +27,20 @@ class FirebaseProvider {
     return _fireStore.collection('user').where('email', isEqualTo: email).limit(1).get();
   }
 
-  Future<QuerySnapshot> login(String email, String password) {
+  Future<QuerySnapshot<Map<String, dynamic>>> login(String email, String password) {
     return _fireStore.collection('user').where('email', isEqualTo: email).where('password', isEqualTo: password).limit(1).get();
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> searchVenue(String name) async {
-    final data = await _fireStore
-        .collection('venueList')
-        .where('name', isGreaterThanOrEqualTo: name.toUpperCase())
-        .where('name', isLessThanOrEqualTo: name.toLowerCase())
-        .get();
-    return data.docs;
+  Future<String> uploadImageToStorage(File imageFile) async {
+    Reference _storageReference = FirebaseStorage.instance.ref().child(
+        DateTime.now().millisecondsSinceEpoch.toString());
+    assert(imageFile.existsSync());
+    UploadTask storageUploadTask = _storageReference.putFile(imageFile);
+    TaskSnapshot storageTaskSnapshot = await storageUploadTask;
+    print(storageTaskSnapshot.ref.getDownloadURL());
+    return storageTaskSnapshot.ref.getDownloadURL();
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getVenue() {
-    return _fireStore.collection('venueList').get();
-  }
+
+
 }

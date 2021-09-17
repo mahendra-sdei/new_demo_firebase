@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:new_demo_firebase/app_setup/app_router.dart';
+import 'package:new_demo_firebase/utils/colors.dart';
 import 'package:new_demo_firebase/utils/firebase_repository.dart';
 import 'package:new_demo_firebase/widgets/common/custom_input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,19 +31,24 @@ class _LoginScreenState extends State<LoginScreen> {
       right: false,
       bottom: true,
       child: Scaffold(
+        backgroundColor: Colors.white,
         bottomNavigationBar: Container(
             height: 55,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(top: BorderSide(width: 1, color: bgDark.withOpacity(0.1))),
+            ),
             child: Center(
               child: RichText(
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Dont have an Account ? ',
-                      style: TextStyle(color: Colors.grey),
+                      text: 'Dont have an account ? ',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                     TextSpan(
-                        text: ' Sign up',
-                        style: TextStyle(color: Colors.purple, fontSize: 16, fontWeight: FontWeight.bold),
+                        text: ' Sign up.',
+                        style: TextStyle(color: Colors.blueAccent, fontSize: 14, fontWeight: FontWeight.bold),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             Navigator.pushNamed(context, AppRouter.REGISTER_SCREEN);
@@ -54,16 +60,15 @@ class _LoginScreenState extends State<LoginScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           centerTitle: true,
+          elevation: 0,
           title: Text(
-            'Login',
-            style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
+            'English (India)',
+            style: TextStyle(color: Colors.grey, fontSize: 14),
           ),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 60,
-            ),
             _buildForm()
           ],
         ),
@@ -77,17 +82,21 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Text(
+              'Firebase Demo',
+              style: TextStyle(fontFamily: 'pac', fontSize: 35),
+            ),
+            SizedBox(
+              height: 25,
+            ),
             TextFormField(
               controller: emailTextController,
               keyboardType: TextInputType.text,
               decoration: CustomInputDecoration(
-                labelText: "Email Address",
-                prefixIcon: Icon(
-                  Icons.email_outlined,
-                  color: Colors.pink,
-                ),
+                labelText: "Email",
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -100,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 15,
             ),
             TextFormField(
               controller: passwordTextController,
@@ -108,10 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
               decoration: CustomInputDecoration(
                 labelText: "Password",
-                prefixIcon: Icon(
-                  Icons.lock,
-                  color: Colors.pink,
-                ),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -124,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             SizedBox(
-              height: 40,
+              height: 15,
             ),
             Center(
               child: MaterialButton(
@@ -145,6 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 isLoading = false;
                               });
                               prefs.setBool('status', true);
+                              prefs.setString('userId', value.docs[0].id);
                               Navigator.pushReplacementNamed(context, AppRouter.HOME_SCREEN);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Invalid credentials')));
@@ -168,20 +174,38 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   }
                 },
-                height: 35,
-                minWidth: 80,
-                color: Colors.pink,
+                height: 55,
+                minWidth: MediaQuery.of(context).size.width,
+                color: Colors.blueAccent,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+                  borderRadius: BorderRadius.circular(5.0),
                 ),
                 child: isLoading
                     ? CupertinoActivityIndicator()
                     : Text(
-                        '  LOGIN  ',
+                        '  Log In  ',
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
                       ),
               ),
-            )
+            ),
+            SizedBox(height: 10),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Forgot your login details? ',
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+                  TextSpan(
+                      text: 'Get help logging in.',
+                      style: TextStyle(color: Colors.blueAccent, fontSize: 14, fontWeight: FontWeight.bold),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.pushNamed(context, AppRouter.REGISTER_SCREEN);
+                        }),
+                ],
+              ),
+            ),
           ],
         ),
       ),

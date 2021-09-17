@@ -1,4 +1,4 @@
 class Constants {
-  static final double radius = 32.0;
+  static final double radius = 5.0;
 
 }

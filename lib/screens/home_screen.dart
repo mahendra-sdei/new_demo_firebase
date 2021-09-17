@@ -7,6 +7,7 @@ import 'package:new_demo_firebase/screens/new_post_page.dart';
 import 'package:new_demo_firebase/screens/search_screen.dart';
 import 'package:new_demo_firebase/utils/bottom_navigation_bar_json.dart';
 import 'package:new_demo_firebase/utils/colors.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key key}) : super(key: key);
@@ -20,9 +21,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: getBody(),
-      bottomNavigationBar: getBottomNavigationBar(),
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body: getBody(),
+        bottomNavigationBar: getBottomNavigationBar(),
+      ),
     );
   }
 
@@ -31,9 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       index: indexPage,
       children: [
         DashboardScreen(),
-        SearchScreen(),
-        NewPostPage(),
-        ActivityPage(),
+        Gallery(),
         AccountPage(),
       ],
     );
