@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget getBottomNavigationBar() {
     return Container(
-      height: 70,
+      height: 55,
       decoration: BoxDecoration(
         color: bgLightGrey,
         border: Border(top: BorderSide(width: 1, color: bgDark.withOpacity(0.3))),

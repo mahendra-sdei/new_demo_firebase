@@ -31,7 +31,7 @@ class AppRouter {
         File file = settings.arguments as File;
         return MaterialPageRoute(builder: (_) => PostAndDesc(imageFile:file));
       case COMMENT_SCREEN:
-        QuerySnapshot<Map<String , dynamic>> snapshot = settings.arguments as QuerySnapshot<Map<String , dynamic>>;
+        List<QueryDocumentSnapshot<Map<String, dynamic>>> snapshot = settings.arguments as List<QueryDocumentSnapshot<Map<String, dynamic>>>;
         return MaterialPageRoute(builder: (_) => CommentScreen(snapshot));
     }
   }

@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:new_demo_firebase/app_setup/app_router.dart';
 import 'package:new_demo_firebase/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +19,8 @@ class _AccountPageState extends State<AccountPage> {
   int selectedIndex = 0;
 
   String userId = '';
+  bool _showPreview = false;
+  String previewImage = '';
 
   @override
   void initState() {
@@ -33,9 +38,127 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: getAppBar(),
-      body: getBody(size),
+    return SafeArea(
+      child: Stack(children: [
+        Scaffold(
+          appBar: getAppBar(),
+          body: getBody(size),
+        ),
+        if (_showPreview) ...[
+          BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 5.0,
+              sigmaY: 5.0,
+            ),
+            child: Container(
+              height: double.infinity,
+              color: Colors.white.withOpacity(0.6),
+            ),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(15),
+                              topLeft: Radius.circular(15),
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 35,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(width: 1, color: bgGrey),
+                                    image: DecorationImage(
+                                        image: NetworkImage('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg'),
+                                        fit: BoxFit.cover)),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                  future: FirebaseFirestore.instance.collection('user').doc(userId).get(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return SizedBox.shrink();
+                                    } else {
+                                      if (snapshot.data == null) {
+                                        return Center(
+                                          child: SizedBox.shrink(),
+                                        );
+                                      } else {
+                                        return snapshot.data == null
+                                            ? SizedBox.shrink()
+                                            : Text(
+                                                "${snapshot.data.data()['fName']} ${snapshot.data.data()['lName']}",
+                                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                              );
+                                      }
+                                    }
+                                  }),
+                            ],
+                          )),
+                      Image.network(
+                        previewImage,
+                        fit: BoxFit.cover,
+                        height: MediaQuery.of(context).size.height * 0.6,
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(15),
+                            bottomLeft: Radius.circular(15),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            IconButton(
+                              splashRadius: 15,
+                              icon: Icon(FontAwesome.heart_o, size: 25),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              splashRadius: 15,
+                              icon: Icon(FontAwesome.comment_o, size: 25),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              splashRadius: 15,
+                              icon: SvgPicture.asset(
+                                "assets/images/share.svg",
+                                width: 20,
+                                height: 20,
+                              ),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                      )
+                    ],
+                  ),
+                )),
+          )
+        ]
+      ]),
     );
   }
 
@@ -66,10 +189,12 @@ class _AccountPageState extends State<AccountPage> {
                               size: 18,
                             ),
                             SizedBox(width: 10),
-                            Text(
-                              "${snapshot.data.data()['fName']} ${snapshot.data.data()['lName']}",
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            )
+                            snapshot.data == null
+                                ? SizedBox.shrink()
+                                : Text(
+                                    "${snapshot.data.data()['fName']} ${snapshot.data.data()['lName']}",
+                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                  )
                           ],
                         ),
                         Row(
@@ -214,8 +339,30 @@ class _AccountPageState extends State<AccountPage> {
                 ],
               ),
               SizedBox(height: 15),
-              Text('instagramName'),
-              Text('instagramBio'),
+              FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                  future: FirebaseFirestore.instance.collection('user').doc(userId).get(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return SizedBox.shrink();
+                    } else {
+                      if (snapshot.data == null) {
+                        return Center(
+                          child: SizedBox.shrink(),
+                        );
+                      } else {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              snapshot.data.data()['uName'],
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(snapshot.data.data()['bio']),
+                          ],
+                        );
+                      }
+                    }
+                  }),
               SizedBox(height: 15),
               Container(
                 height: 35,
@@ -332,11 +479,22 @@ class _AccountPageState extends State<AccountPage> {
                   spacing: 3,
                   runSpacing: 3,
                   children: List.generate(snapshot.data.docs.length, (index) {
-                    return Container(
-                      height: 150,
-                      width: (size.width - 6) / 3,
-                      decoration:
-                          BoxDecoration(image: DecorationImage(image: NetworkImage(snapshot.data.docs[index].data()['image']), fit: BoxFit.cover)),
+                    return GestureDetector(
+                      onLongPress: () {
+                        previewImage = snapshot.data.docs[index].data()['image'];
+                        _showPreview = true;
+                        setState(() {});
+                      },
+                      onLongPressEnd: (details) {
+                        _showPreview = false;
+                        setState(() {});
+                      },
+                      child: Container(
+                        height: 150,
+                        width: (size.width - 6) / 3,
+                        decoration:
+                            BoxDecoration(image: DecorationImage(image: NetworkImage(snapshot.data.docs[index].data()['image']), fit: BoxFit.cover)),
+                      ),
                     );
                   }));
             }
@@ -358,16 +516,27 @@ class _AccountPageState extends State<AccountPage> {
             } else {
               return Wrap(
                   children: List.generate(snapshot.data.docs.length, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: size.width,
-                        width: size.width,
-                        decoration:
-                        BoxDecoration(image: DecorationImage(image: NetworkImage(snapshot.data.docs[index].data()['image']), fit: BoxFit.cover)),
-                      ),
-                    );
-                  }));
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onLongPress: () {
+                      previewImage = snapshot.data.docs[index].data()['image'];
+                      _showPreview = true;
+                      setState(() {});
+                    },
+                    onLongPressEnd: (details) {
+                      _showPreview = false;
+                      setState(() {});
+                    },
+                    child: Container(
+                      height: size.width,
+                      width: size.width,
+                      decoration:
+                          BoxDecoration(image: DecorationImage(image: NetworkImage(snapshot.data.docs[index].data()['image']), fit: BoxFit.cover)),
+                    ),
+                  ),
+                );
+              }));
             }
           }
         });

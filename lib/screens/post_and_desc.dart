@@ -31,7 +31,9 @@ class _PostAndDescState extends State<PostAndDesc> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 0,
         centerTitle: false,
         leading: IconButton(
             onPressed: () {
@@ -48,7 +50,10 @@ class _PostAndDescState extends State<PostAndDesc> {
         ),
         actions: [
           isLoading
-              ? CupertinoActivityIndicator()
+              ? Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: CupertinoActivityIndicator(),
+              )
               : IconButton(
                   onPressed: () {
                     isLoading = true;
@@ -57,7 +62,7 @@ class _PostAndDescState extends State<PostAndDesc> {
                       FirebaseFirestore.instance
                           .collection('post')
                           .doc()
-                          .set({'image': value, 'caption': captionController.text, 'userId': userId}).then((value) {
+                          .set({'image': value, 'caption': captionController.text, 'userId': userId,'createAt':Timestamp.now()}).then((value) {
                         setState(() {
                           isLoading = false;
                         });

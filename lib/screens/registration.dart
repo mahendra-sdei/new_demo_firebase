@@ -17,7 +17,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController passwordTextController = TextEditingController();
   final TextEditingController confirmPasswordTextController = TextEditingController();
   final TextEditingController emailNameTextController = TextEditingController();
-  final TextEditingController mobileTextController = TextEditingController();
+  final TextEditingController bioTextController = TextEditingController();
   bool isAcceptedTermAndCond = false;
 
   final firebaseRepository = FirebaseRepository();
@@ -200,10 +200,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             height: 20,
           ),
           TextFormField(
-            controller: mobileTextController,
+            controller: bioTextController,
             keyboardType: TextInputType.text,
             decoration: CustomInputDecoration(
-              labelText: "Mobile",
+              labelText: "Bio",
               prefixIcon: Icon(
                 Icons.mobile_screen_share,
                 color: Colors.pink,
@@ -229,11 +229,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           Center(
             child: MaterialButton(
               onPressed: () => signUp(),
-              height: 35,
-              minWidth: 70,
+              height: 50,
+              minWidth: MediaQuery.of(context).size.width,
               color: Colors.pink,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
+                borderRadius: BorderRadius.circular(5.0),
               ),
               child: isLoading ? CupertinoActivityIndicator() : Text('SIGN UP',style: TextStyle(fontSize: 16, color: Colors.white ,fontWeight:  FontWeight.bold)),
             ),
@@ -292,7 +292,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 firstName: firstNameTextController.text,
                 lastName: lastNameTextController.text,
                 email: emailNameTextController.text,
-                mobileNo: mobileTextController.text,
+                bio: bioTextController.text,
                 password: passwordTextController.text,
                 userName: userNameTextController.text)
             .then((value) async {

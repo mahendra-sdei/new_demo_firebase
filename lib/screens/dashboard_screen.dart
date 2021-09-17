@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:new_demo_firebase/app_setup/app_router.dart';
 import 'package:new_demo_firebase/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,7 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return ListView(
       children: [
         StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: FirebaseFirestore.instance.collection('post').snapshots(),
+            stream: FirebaseFirestore.instance.collection('post').orderBy('createAt', descending: true).snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: SizedBox.shrink());
@@ -195,7 +196,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 splashRadius: 15,
                                                 icon: Icon(FontAwesome.comment_o, size: 25),
                                                 onPressed: () {
-                                                  Navigator.pushNamed(context, AppRouter.COMMENT_SCREEN,arguments: snapComment.data.docs);
+                                                  Navigator.pushNamed(context, AppRouter.COMMENT_SCREEN, arguments: snapComment.data.docs);
                                                 },
                                               );
                                             }
@@ -340,10 +341,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ],
                                 ),
                                 SizedBox(height: 5),
-                                Text(
-                                  'date time',
-                                  style: TextStyle(fontSize: 12, color: textGrey),
-                                )
+                                FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                    future: FirebaseFirestore.instance.collection('user').doc(snapshot.data.docs[index].data()['userId']).get(),
+                                    builder: (context, snap) {
+                                      if (!snap.hasData) {
+                                        return SizedBox.shrink();
+                                      } else {
+                                        if (snap.data == null) {
+                                          return Center(
+                                            child: SizedBox.shrink(),
+                                          );
+                                        } else {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(left: 2.0),
+                                            child: Text(DateFormat.yMMMMd('en_US').format(snapshot.data.docs[index].data()['createAt'].toDate()),
+                                                style: TextStyle(height: 1.5)),
+                                          );
+                                        }
+                                      }
+                                    }),
                               ],
                             ),
                           )

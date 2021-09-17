@@ -6,8 +6,8 @@ import 'package:new_demo_firebase/utils/firebase_provider.dart';
 class FirebaseRepository {
   FirebaseProvider firebaseProvider = FirebaseProvider();
 
-  Future<void> addUserData({String firstName, String lastName,  String userName,  String email,  String password,  String mobileNo}) =>
-      firebaseProvider.addUserData(firstName, lastName, userName, email, password, mobileNo);
+  Future<void> addUserData({String firstName, String lastName,  String userName,  String email,  String password,  String bio}) =>
+      firebaseProvider.addUserData(firstName, lastName, userName, email, password, bio);
 
   Future<QuerySnapshot<Map<String, dynamic>>> login({ String email,  String password}) => firebaseProvider.login(email, password);
 

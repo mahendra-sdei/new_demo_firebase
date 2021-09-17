@@ -12,14 +12,14 @@ class FirebaseProvider {
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
-  Future<void> addUserData(String firstName, String lastName, String userName, String email, String password, String mobileNo) async {
+  Future<void> addUserData(String firstName, String lastName, String userName, String email, String password, String bio) async {
     await _fireStore.collection('user').doc().set({
       'fName': firstName,
       'lName': lastName,
       'uName': userName,
       'email': email,
       'password': password,
-      'mobile': mobileNo,
+      'bio': bio,
     });
   }
 
