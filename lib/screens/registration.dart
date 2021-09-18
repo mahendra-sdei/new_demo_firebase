@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_demo_firebase/app_setup/app_router.dart';
-import 'package:new_demo_firebase/utils/firebase_repository.dart';
+import 'package:new_demo_firebase/services/firebase_repository.dart';
 import 'package:new_demo_firebase/widgets/common/custom_input_decoration.dart';
 
 class RegistrationScreen extends StatefulWidget {

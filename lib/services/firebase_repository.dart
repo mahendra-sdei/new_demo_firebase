@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:new_demo_firebase/utils/firebase_provider.dart';
+import 'package:new_demo_firebase/services/firebase_provider.dart';
 
 class FirebaseRepository {
   FirebaseProvider firebaseProvider = FirebaseProvider();

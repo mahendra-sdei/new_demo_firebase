@@ -29,10 +29,13 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => HomeScreen());
       case POST_AND_DESC:
         File file = settings.arguments as File;
-        return MaterialPageRoute(builder: (_) => PostAndDesc(imageFile:file));
+        return MaterialPageRoute(builder: (_) => PostAndDesc(imageFile: file));
       case COMMENT_SCREEN:
-        List<QueryDocumentSnapshot<Map<String, dynamic>>> snapshot = settings.arguments as List<QueryDocumentSnapshot<Map<String, dynamic>>>;
+        List<QueryDocumentSnapshot<Map<String, dynamic>>> snapshot =
+            settings.arguments as List<QueryDocumentSnapshot<Map<String, dynamic>>>;
         return MaterialPageRoute(builder: (_) => CommentScreen(snapshot));
+      default:
+        return MaterialPageRoute(builder: (_) => Scaffold(body: Center(child: Text("Invalid Route"))));
     }
   }
 }

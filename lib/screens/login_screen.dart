@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:new_demo_firebase/app_setup/app_router.dart';
 import 'package:new_demo_firebase/utils/colors.dart';
-import 'package:new_demo_firebase/utils/firebase_repository.dart';
+import 'package:new_demo_firebase/services/firebase_repository.dart';
 import 'package:new_demo_firebase/widgets/common/custom_input_decoration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,11 +17,26 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailTextController = TextEditingController();
-  final TextEditingController passwordTextController = TextEditingController();
+  TextEditingController emailTextController;
+  TextEditingController passwordTextController;
 
-  final firebaseRepository = FirebaseRepository();
+  FirebaseRepository firebaseRepository;
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    emailTextController = TextEditingController();
+    passwordTextController = TextEditingController();
+    firebaseRepository = FirebaseRepository();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    emailTextController.dispose();
+    passwordTextController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Dont have an account ? ',
+                      text: 'Don\'t have an account ? ',
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                     TextSpan(
@@ -68,9 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildForm()
-          ],
+          children: [_buildForm()],
         ),
       ),
     );
@@ -142,7 +155,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     try {
                       final result = await InternetAddress.lookup('example.com');
                       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-                        firebaseRepository.login(email: emailTextController.text, password: passwordTextController.text).then((value) async {
+                        firebaseRepository
+                            .login(email: emailTextController.text, password: passwordTextController.text)
+                            .then((value) async {
                           print('check' + value.docs.length.toString());
                           try {
                             if (value.docs.length > 0) {

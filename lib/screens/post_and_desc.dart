@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_demo_firebase/app_setup/app_router.dart';
 import 'package:new_demo_firebase/screens/home_screen.dart';
-import 'package:new_demo_firebase/utils/firebase_repository.dart';
+import 'package:new_demo_firebase/services/firebase_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PostAndDesc extends StatefulWidget {

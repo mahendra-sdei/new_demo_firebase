@@ -316,7 +316,7 @@ class _AccountPageState extends State<AccountPage> {
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "Follwers",
+                              "Followers",
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, height: 1.5),
                             ),
                           ],
